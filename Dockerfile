@@ -1,0 +1,165 @@
+FROM node:9.11 AS front
+
+COPY ./src/teorema-system /node/teorema-system
+
+#RUN  cd /node/teorema-system \
+#  && npm i \
+#  && ./node_modules/gulp/bin/gulp.js \
+#  && rm -rf node_modules .git*
+
+FROM node:11.3 AS mobile
+
+COPY ./src/teorema-mobile /node/teorema-mobile
+
+RUN  cd /node/teorema-mobile \
+  && npm i \
+  && npm run build \
+  && rm -rf node_modules .git*
+
+FROM ubuntu:xenial AS build
+
+RUN apt-get update \
+ && apt-get install -y --fix-missing \
+    ### Installing python3 with deps ###
+    python3 python3-psycopg2 python3-pip virtualenv \
+    ### Installing libsrtp0-dev ###
+    libsrtp0-dev \
+    ### QT deps ###
+    qt5-default libqt5x11extras5-dev libqt5sql5-psql libqt5websockets5-dev \
+    ### ffmpeg deps ###
+    libx264-dev \
+    ### Postgres ###
+    postgresql \
+    ### build deps ###
+    cmake autotools-dev build-essential libtool automake pkg-config gengetopt yasm git \
+    ### Nginx deps ###
+    libpcre3-dev libssl-dev \
+    ### Kvadrator deps ###
+    libopencv-dev \
+ && apt-get clean \
+ && find /usr/ -type l -o -type f | sed 's/\ /\\\ /g ; s/usr/ocular\/usr/g' > /tmp/usr.lst
+
+     ### ffmpeg ###
+COPY ./src/ffmpeg /ocular/src/ffmpeg
+RUN  cd /ocular/src/ffmpeg \
+  && sh ./configure --prefix=/usr \
+                    --enable-gpl \
+                    --enable-nonfree \
+                    --enable-libx264 \
+                    --enable-pic \
+                    --enable-shared \
+                    --enable-static \
+  && make -j8 \
+  && make install
+
+     ### Nginx ###
+COPY ./src/nginx /ocular/src/nginx
+RUN  cd /ocular/src/nginx \
+  && sh ./configure --prefix=/usr/local/etc/nginx \
+                    --sbin-path=/usr/local/sbin/nginx \
+		    --conf-path=/usr/local/etc/nginx/nginx.conf \
+		    --error-log-path=/var/log/nginx/error.log \
+		    --http-log-path=/var/log/nginx/access.log \
+		    --pid-path=/var/run/nginx.pid \
+        	    --lock-path=/var/run/nginx.lock \
+                    --with-cc-opt="-Wno-error" \
+                    --with-http_ssl_module \
+                    --add-module=${PWD}/nginx-rtmp-module-1.1.7 \
+  && make \
+  && make install
+
+    ### processInstance ###
+COPY ./src/theoremg /ocular/src/theoremg
+RUN  cd /ocular/src/theoremg/wrappers/http/pages \
+  && bash ./pack.sh \
+  && cd /ocular/src/theoremg \
+  && qmake -r theoremG.pro \
+  && make -j 8 \
+  && mv /ocular/src/theoremg/bin/processInstance /usr/bin/processInstance
+
+    ### Kvadrator ###
+COPY ./src/Kvadrator /ocular/src/Kvadrator
+RUN  cd /ocular/src/Kvadrator/project \
+  && qmake \
+  && make \
+  && mv /ocular/src/Kvadrator/project/kvadrator /usr/bin/kvadrator
+
+    ### Admin Worker ###
+COPY ./src/teorema /var/www/teorema
+COPY --from=mobile /node/teorema-mobile /var/www/teorema/mobile
+COPY --from=front /node/teorema-system /var/www/teorema/theorema-frontend
+RUN cd /var/www/teorema \
+ && virtualenv -p python3 env \
+ && . env/bin/activate \
+ && pip3 install --no-cache-dir -r ./requirements.txt \
+ && python3 manage.py collectstatic --noinput \
+ && deactivate
+
+FROM ubuntu:xenial AS diff
+
+COPY --from=build /tmp/usr.lst /tmp/usr.lst
+COPY --from=build /usr /ocular/usr
+RUN cat /tmp/usr.lst | xargs rm -rf \
+ && find /ocular/usr/ -empty -type d -delete
+
+FROM ubuntu:xenial AS final
+
+RUN  apt-get update \
+  && apt-get install -y --fix-missing \
+     --no-install-recommends \
+     ### Installing python3 with deps ###
+     python3 python3-pip virtualenv cron \
+     ### Postgres ###
+     postgresql \
+     ### Other deps ###
+     supervisor rsync vim inotify-tools \
+     ### libsrtp0-dev ###
+     libsrtp0-dev \
+     ### QT deps ###
+     qt5-default libqt5x11extras5-dev libqt5sql5-psql libqt5websockets5-dev \
+     ### ffmpeg deps ###
+     libx264-dev \
+     ### Nginx deps ###
+     libpcre3-dev libssl-dev \
+     ### Kvadrator deps ###
+     libopencv-dev \
+     ### ffmpeg ###
+     ffmpeg \
+     ### libsrtp ###
+     libx264-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /var/www/teorema /var/www/teorema
+COPY --from=diff /ocular/usr /ocular/usr
+RUN  rsync -azvh --remove-source-files /ocular/usr/ /usr/
+
+    ### Other ###
+COPY ./src/nginx/nginx-rtmp-module-1.1.7 /usr/local/lib/nginx/modules/nginx-rtmp-module-1.1.7
+COPY ./src/supervisor /etc/supervisor
+COPY ./src/bin/* /usr/bin/
+COPY ./src/scripts /usr/local/scripts
+COPY ./src/pg /tmp/pg
+RUN  mv /tmp/pg/pg_hba.conf /etc/postgresql/9.5/main/ \
+     \
+  && ln -sf /home/_processInstances/cameras.conf /etc/supervisor/conf.d/cameras.conf \
+  && chgrp -R www-data /etc/supervisor/* \
+  && chmod -R g+w /etc/supervisor/* \
+  && mkdir -p /var/log/supervisor_child \
+     \
+  && chmod 755 /usr/bin/docker_* \
+     \
+  && chown -R www-data:www-data /var/www \
+     \
+  && groupadd nginx && useradd -g nginx nginx \
+  && mkdir -p /var/log/nginx \
+     \
+  && ln -sf /usr/local/scripts/crontab /var/spool/cron/crontabs/root \
+     \
+  && sed -i 's@Etc/UTC@Europe/Moscow@g' /etc/timezone \
+  && sed -i 's@UTC0@MSK-3@g' /etc/localtime \
+  && dpkg-reconfigure -f noninteractive tzdata
+
+CMD ["docker_entrypoint"]
+
+VOLUME /var/lib/postgresql/9.5/main /home/_processInstances /home/_VideoArchive
