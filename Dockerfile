@@ -102,7 +102,7 @@ COPY --from=build /usr /ocular/usr
 RUN cat /tmp/usr.lst | xargs rm -rf \
  && find /ocular/usr/ -empty -type d -delete
 
-FROM ubuntu:xenial AS final
+FROM ubuntu:xenial
 
 RUN  apt-get update \
   && apt-get install -y --fix-missing \
