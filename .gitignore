@@ -1,4 +1,7 @@
 *
+!src/pg/
+!src/supervisor/
+!src/scripts/
 !Dockerfile
 !.dockerignore
 !.gitignore

@@ -137,7 +137,6 @@ RUN  rsync -azvh --remove-source-files /ocular/usr/ /usr/
     ### Other ###
 COPY ./src/nginx/nginx-rtmp-module-1.1.7 /usr/local/lib/nginx/modules/nginx-rtmp-module-1.1.7
 COPY ./src/supervisor /etc/supervisor
-COPY ./src/bin/* /usr/bin/
 COPY ./src/scripts /usr/local/scripts
 COPY ./src/pg /tmp/pg
 RUN  mv /tmp/pg/pg_hba.conf /etc/postgresql/9.5/main/ \
@@ -147,14 +146,14 @@ RUN  mv /tmp/pg/pg_hba.conf /etc/postgresql/9.5/main/ \
   && chmod -R g+w /etc/supervisor/* \
   && mkdir -p /var/log/supervisor_child \
      \
-  && chmod 755 /usr/bin/docker_* \
-     \
   && chown -R www-data:www-data /var/www \
      \
   && groupadd nginx && useradd -g nginx nginx \
   && mkdir -p /var/log/nginx \
      \
-  && ln -sf /usr/local/scripts/crontab /var/spool/cron/crontabs/root \
+  && mv /usr/local/scripts/crontab /var/spool/cron/crontabs/root \
+  && chmod 755 /usr/local/scripts/* \
+  && ln -sf /usr/local/scripts/docker_* /usr/bin/ \
      \
   && sed -i 's@Etc/UTC@Europe/Moscow@g' /etc/timezone \
   && sed -i 's@UTC0@MSK-3@g' /etc/localtime \

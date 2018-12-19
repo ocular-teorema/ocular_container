@@ -1,0 +1,4 @@
+0 6 * * * sh /usr/local/scripts/delvideo_new.sh
+0 6 * * * sh /usr/local/scripts/del_by_size.sh
+*/10 * * * * sh /usr/local/scripts/check_cam.sh
+*/10 * * * * python3 /usr/local/scripts/check_cam.py

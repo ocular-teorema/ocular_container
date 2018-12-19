@@ -1,0 +1,5 @@
+#!/bin/bash
+service cron start
+service postgresql start
+cat /var/lib/postgresql/9.5/main/.MARK &>2 /dev/null || docker_firstrun
+supervisord

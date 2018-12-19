@@ -1,0 +1,31 @@
+#!/bin/bash
+touch /home/_processInstances/cameras.conf
+ln -sf /home/_processInstances/cameras.conf /etc/supervisor/conf.d/cameras.conf
+chmod g+w /home/_processInstances/cameras.conf
+
+chown -R www-data:www-data /home/_processInstances
+chown -R www-data:www-data /home/_VideoArchive
+
+su - postgres -c "psql -c \"create role root superuser;\""
+su - postgres -c "psql -c \"alter role root superuser;\""
+su - postgres -c "psql -c 'CREATE DATABASE theorema;'"
+su - postgres -c "psql -c \"CREATE USER theorema WITH PASSWORD 'theorema';\""
+su - postgres -c "psql -c 'GRANT ALL ON DATABASE theorema TO theorema;'"
+su - postgres -c "psql -c 'CREATE DATABASE video_analytics;'"
+su - postgres -c "psql -c \"CREATE USER va WITH PASSWORD 'theorema';\""
+su - postgres -c "psql -c 'GRANT ALL ON DATABASE video_analytics TO va;'"
+su - postgres -c "psql -c 'ALTER ROLE "va" WITH LOGIN'"
+su - postgres -c "psql -c 'ALTER ROLE "va" WITH SUPERUSER'"
+su - postgres -c "psql -c 'ALTER ROLE "root" WITH LOGIN'"
+su - postgres -c "psql -c 'ALTER ROLE "root" WITH SUPERUSER'"
+psql video_analytics < /tmp/pg/va_schema_dump.sql
+
+cd /var/www/teorema
+source /var/www/teorema/env/bin/activate
+python3 manage.py makemigrations cameras orgs other users --noinput
+python3 manage.py migrate --noinput
+deactivate
+
+service postgresql restart
+
+touch /var/lib/postgresql/9.5/main/.MARK
