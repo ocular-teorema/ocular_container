@@ -6,3 +6,4 @@
 !.dockerignore
 !.gitignore
 !*.md
+!docker-compose.yml

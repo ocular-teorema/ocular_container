@@ -2,19 +2,21 @@ FROM node:9.11 AS front
 
 COPY ./src/teorema-system /node/teorema-system
 
-#RUN  cd /node/teorema-system \
-#  && npm i \
-#  && ./node_modules/gulp/bin/gulp.js \
-#  && rm -rf node_modules .git*
+RUN  cd /node/teorema-system \
+  && rm -rf node_modules .git* *.lock package-lock.json \
+  && npm i \
+  && ./node_modules/gulp/bin/gulp.js production \
+  && rm -rf node_modules .git* *.lock package-lock.json
 
 FROM node:11.3 AS mobile
 
 COPY ./src/teorema-mobile /node/teorema-mobile
 
 RUN  cd /node/teorema-mobile \
+  && rm -rf node_modules .git* *.lock package-lock.json \
   && npm i \
   && npm run build \
-  && rm -rf node_modules .git*
+  && rm -rf node_modules .git* *.lock package-lock.json
 
 FROM ubuntu:xenial AS build
 
@@ -70,6 +72,7 @@ RUN  cd /ocular/src/nginx \
 
     ### processInstance ###
 COPY ./src/theoremg /ocular/src/theoremg
+COPY ./src/qhttpserver /ocular/src/theoremg/wrappers/qhttpserver
 RUN  cd /ocular/src/theoremg/wrappers/http/pages \
   && bash ./pack.sh \
   && cd /ocular/src/theoremg \
