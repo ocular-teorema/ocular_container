@@ -2,8 +2,8 @@
 
 ### Установка Docker
 
-Устанавливаем Docker по этому мануалу: https://docs.docker.com/install/linux/docker-ce/ubuntu
-Устанавливаем Docker Compose по этому мануалу: https://docs.docker.com/compose/install/#install-compose
+ * Устанавливаем Docker по этому мануалу: https://docs.docker.com/install/linux/docker-ce/ubuntu
+ * Устанавливаем Docker Compose по этому мануалу: https://docs.docker.com/compose/install/#install-compose
 
 ### Подготовка окружения
 
