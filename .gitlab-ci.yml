@@ -5,6 +5,9 @@ stages:
   build
 
 build:docker:
+  stage: build
+  when: manual
+  allow_failure: false
   extends: .build_docker
   cache:
     key: $CI_PROJECT_NAME
