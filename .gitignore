@@ -7,3 +7,4 @@
 !.gitignore
 !*.md
 !docker-compose.yml
+!.gitlab-ci.yml

@@ -1,0 +1,21 @@
+include:
+  - https://gitlab.ddgcorp.ru/devops/ci/raw/master/build_docker.yml
+
+stages:
+  build
+
+build:docker:
+  extends: .build_docker
+  cache:
+    key: $CI_PROJECT_NAME
+    paths:
+      - src/
+  before_script:
+    - cd src && \
+      git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front.git && \
+      git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front_mobile.git && \
+      git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_pi.git && \
+      git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_qadrator.git && \
+      git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/teorema.git && \ 
+      git clone https://github.com/PimenovAlexander/qhttpserver.git && \
+      git clone --branch 'release/4.1' --depth '1' https://github.com/FFmpeg/FFmpeg.git

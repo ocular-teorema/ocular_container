@@ -1,8 +1,8 @@
 FROM node:9.11 AS front
 
-COPY ./src/teorema-system /node/teorema-system
+COPY ./src/ocular_front /node
 
-RUN  cd /node/teorema-system \
+RUN  cd /node \
   && rm -rf node_modules .git* *.lock package-lock.json \
   && npm i \
   && ./node_modules/gulp/bin/gulp.js production \
@@ -10,9 +10,9 @@ RUN  cd /node/teorema-system \
 
 FROM node:11.3 AS mobile
 
-COPY ./src/teorema-mobile /node/teorema-mobile
+COPY ./src/ocular_front_mobile /node
 
-RUN  cd /node/teorema-mobile \
+RUN  cd /node \
   && rm -rf node_modules .git* *.lock package-lock.json \
   && npm i \
   && npm run build \
@@ -36,13 +36,13 @@ RUN apt-get update \
     cmake autotools-dev build-essential libtool automake pkg-config gengetopt yasm git \
     ### Nginx deps ###
     libpcre3-dev libssl-dev \
-    ### Kvadrator deps ###
+    ### qadrator deps ###
     libopencv-dev \
  && apt-get clean \
  && find /usr/ -type l -o -type f | sed 's/\ /\\\ /g ; s/usr/ocular\/usr/g' > /tmp/usr.lst
 
      ### ffmpeg ###
-COPY ./src/ffmpeg /ocular/src/ffmpeg
+COPY ./src/FFmpeg /ocular/src/ffmpeg
 RUN  cd /ocular/src/ffmpeg \
   && sh ./configure --prefix=/usr \
                     --enable-gpl \
@@ -71,21 +71,19 @@ RUN  cd /ocular/src/nginx \
   && make install
 
     ### processInstance ###
-COPY ./src/theoremg /ocular/src/theoremg
-COPY ./src/qhttpserver /ocular/src/theoremg/wrappers/qhttpserver
-RUN  cd /ocular/src/theoremg/wrappers/http/pages \
-  && bash ./pack.sh \
-  && cd /ocular/src/theoremg \
+COPY ./src/ocular_pi /ocular/src/pi
+COPY ./src/qhttpserver /ocular/src/pi/wrappers/qhttpserver
+RUN  cd /ocular/src/pi \
   && qmake -r theoremG.pro \
-  && make -j 8 \
-  && mv /ocular/src/theoremg/bin/processInstance /usr/bin/processInstance
+  && make \
+  && mv /ocular/src/pi/bin/processInstance /usr/bin/processInstance
 
-    ### Kvadrator ###
-COPY ./src/Kvadrator /ocular/src/Kvadrator
-RUN  cd /ocular/src/Kvadrator/project \
+    ### qadrator ###
+COPY ./src/ocular_qadrator /ocular/src/qadrator
+RUN  cd /ocular/src/qadrator/project \
   && qmake \
   && make \
-  && mv /ocular/src/Kvadrator/project/kvadrator /usr/bin/kvadrator
+  && mv /ocular/src/qadrator/project/kvadrator /usr/bin/kvadrator
 
     ### Admin Worker ###
 COPY ./src/teorema /var/www/teorema
@@ -124,7 +122,7 @@ RUN  apt-get update \
      libx264-dev \
      ### Nginx deps ###
      libpcre3-dev libssl-dev \
-     ### Kvadrator deps ###
+     ### qadrator deps ###
      libopencv-dev \
      ### ffmpeg ###
      ffmpeg \
