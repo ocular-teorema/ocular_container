@@ -2,7 +2,7 @@ include:
   - https://gitlab.ddgcorp.ru/devops/ci/raw/master/build_docker.yml
 
 stages:
-  build
+  - build
 
 build:docker:
   stage: build
