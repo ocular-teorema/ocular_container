@@ -14,6 +14,7 @@ build:docker:
     paths:
       - src/
   before_script:
+    - /bin/bash
     - cd src && \
       git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front.git && \
       git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front_mobile.git && \
