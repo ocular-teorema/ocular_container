@@ -87,8 +87,8 @@ RUN  cd /ocular/src/qadrator/project \
 
     ### Admin Worker ###
 COPY ./src/teorema /var/www/teorema
-COPY --from=mobile /node/teorema-mobile/dist/teorema-mobile /var/www/teorema/mobile
-COPY --from=front /node/teorema-system /var/www/teorema/theorema-frontend
+COPY --from=mobile /node/dist/teorema-mobile /var/www/teorema/mobile
+COPY --from=front /node /var/www/teorema/theorema-frontend
 RUN cd /var/www/teorema \
  && virtualenv -p python3 env \
  && . env/bin/activate \
