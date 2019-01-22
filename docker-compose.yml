@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   ocular:
-    image: docker.ddgcorp.ru/manzoni/ocular_container:latest
+    image: docker.ddgcorp.ru/manzoni/ocular_container:master
     build: .
     restart: always
     tty: true
