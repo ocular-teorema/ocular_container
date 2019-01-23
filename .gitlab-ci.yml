@@ -11,10 +11,6 @@ build:docker:
   when: manual
   allow_failure: false
   extends: .build_docker
-  cache:
-    key: $CI_PROJECT_NAME
-    paths:
-      - src/
   before_script:
     - sh -c "
       cd src
