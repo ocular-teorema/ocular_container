@@ -20,7 +20,7 @@ RUN  cd /node \
 
 FROM ubuntu:xenial AS build
 
-RUN add-apt-repository ppa:timsc/opencv-3.4 \
+RUN add-apt-repository ppa:timsc/opencv-3.4 && \
 	apt-get update \
  && apt-get install -y --fix-missing \
     ### Installing python3 with deps ###
