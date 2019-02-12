@@ -20,6 +20,10 @@ services:
       - pg:/var/lib/postgresql/9.5/main
       - pi:/home/_processInstances
       - va:/home/_VideoArchive
+      # --------------------------------------------------
+      # Если нужно вынести какую-либо из этих директорий в определённый каталог:
+      # /some/directory/va:/home/_VideoArchive
+      # ------------------------------------------------
 
 networks:
   nw:
