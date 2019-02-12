@@ -20,7 +20,8 @@ RUN  cd /node \
 
 FROM ubuntu:xenial AS build
 
-RUN apt-get update \
+RUN add-apt-repository ppa:timsc/opencv-3.4 \
+	apt-get update \
  && apt-get install -y --fix-missing \
     ### Installing python3 with deps ###
     python3 python3-psycopg2 python3-pip virtualenv \
@@ -36,7 +37,7 @@ RUN apt-get update \
     cmake autotools-dev build-essential libtool automake pkg-config gengetopt yasm git \
     ### Nginx deps ###
     libpcre3-dev libssl-dev \
-    ### qadrator deps ###
+    ### qadrator deps ###    
     libopencv-dev \
  && apt-get clean \
  && find /usr/ -type l -o -type f | sed 's/\ /\\\ /g ; s/usr/ocular\/usr/g' > /tmp/usr.lst
