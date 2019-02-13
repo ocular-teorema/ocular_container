@@ -36,15 +36,13 @@ RUN apt-get update \
     cmake autotools-dev build-essential libtool automake pkg-config gengetopt yasm git \
     ### Nginx deps ###
     libpcre3-dev libssl-dev \
-    ### qadrator deps ###
-    libopencv-dev \
     ### software-properties-common ###
     software-properties-common \
     ### opencv ###
- && add-apt-repository ppa:sbadia/opencv \
+ && add-apt-repository -y ppa:sbadia/opencv \
  && apt-get update \
  && apt-get install -y -f \
-    opencv \
+    libopencv-dev \
  && apt-get clean \
  && find /usr/ -type l -o -type f | sed 's/\ /\\\ /g ; s/usr/ocular\/usr/g' > /tmp/usr.lst
 
@@ -138,10 +136,10 @@ RUN  apt-get update \
      ### software-properties-common ###
      software-properties-common \
      ### opencv ###
-  && add-apt-repository ppa:sbadia/opencv \
+  && add-apt-repository -y ppa:sbadia/opencv \
   && apt-get update \
   && apt-get install -y -f \
-     opencv \
+     libopencv-dev \
   && apt-get purge software-properties-common -y \
   && apt-get autoremove -y \
   && apt-get clean \
