@@ -20,7 +20,8 @@ RUN  cd /node \
 
 FROM ubuntu:xenial AS build
 
-RUN apt-get update \
+RUN add-apt-repository ppa:sbadia/opencv \
+ && apt-get update \
  && apt-get install -y --fix-missing \
     ### Installing python3 with deps ###
     python3 python3-psycopg2 python3-pip virtualenv \
@@ -37,7 +38,7 @@ RUN apt-get update \
     ### Nginx deps ###
     libpcre3-dev libssl-dev \
     ### qadrator deps ###
-    libopencv-dev \
+    libopencv-dev opencv \
  && apt-get clean \
  && find /usr/ -type l -o -type f | sed 's/\ /\\\ /g ; s/usr/ocular\/usr/g' > /tmp/usr.lst
 
@@ -105,7 +106,8 @@ RUN cat /tmp/usr.lst | xargs rm -rf \
 
 FROM ubuntu:xenial
 
-RUN  apt-get update \
+RUN  add-apt-repository ppa:sbadia/opencv \
+  && apt-get update \
   && apt-get install -y --fix-missing \
      --no-install-recommends \
      ### Installing python3 with deps ###
@@ -128,6 +130,8 @@ RUN  apt-get update \
      ffmpeg \
      ### libsrtp ###
      libx264-dev \
+     ### opencv ###
+     opencv \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
