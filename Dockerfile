@@ -20,8 +20,7 @@ RUN  cd /node \
 
 FROM ubuntu:xenial AS build
 
-RUN add-apt-repository ppa:sbadia/opencv \
- && apt-get update \
+RUN apt-get update \
  && apt-get install -y --fix-missing \
     ### Installing python3 with deps ###
     python3 python3-psycopg2 python3-pip virtualenv \
@@ -38,7 +37,14 @@ RUN add-apt-repository ppa:sbadia/opencv \
     ### Nginx deps ###
     libpcre3-dev libssl-dev \
     ### qadrator deps ###
-    libopencv-dev opencv \
+    libopencv-dev \
+    ### software-properties-common ###
+    software-properties-common \
+    ### opencv ###
+ && add-apt-repository ppa:sbadia/opencv \
+ && apt-get update \
+ && apt-get install -y -f \
+    opencv \
  && apt-get clean \
  && find /usr/ -type l -o -type f | sed 's/\ /\\\ /g ; s/usr/ocular\/usr/g' > /tmp/usr.lst
 
@@ -106,8 +112,7 @@ RUN cat /tmp/usr.lst | xargs rm -rf \
 
 FROM ubuntu:xenial
 
-RUN  add-apt-repository ppa:sbadia/opencv \
-  && apt-get update \
+RUN  apt-get update \
   && apt-get install -y --fix-missing \
      --no-install-recommends \
      ### Installing python3 with deps ###
@@ -130,8 +135,15 @@ RUN  add-apt-repository ppa:sbadia/opencv \
      ffmpeg \
      ### libsrtp ###
      libx264-dev \
+     ### software-properties-common ###
+     software-properties-common \
      ### opencv ###
+  && add-apt-repository ppa:sbadia/opencv \
+  && apt-get update \
+  && apt-get install -y -f \
      opencv \
+  && apt-get purge software-properties-common -y \
+  && apt-get autoremove -y \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
