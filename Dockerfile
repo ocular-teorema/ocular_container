@@ -21,7 +21,7 @@ RUN  cd /node \
 FROM ubuntu:xenial AS build
 
 RUN apt install software-properties-common && \
-	add-apt-repository ppa:timsc/opencv-3.4 && \
+	add-apt-repository -y ppa:sbadia/opencv && \
 	apt-get update \
  && apt-get install -y --fix-missing \
     ### Installing python3 with deps ###
