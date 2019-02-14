@@ -20,9 +20,8 @@ RUN  cd /node \
 
 FROM ubuntu:xenial AS build
 
-RUN	add-apt-repository -y ppa:sbadia/opencv && \
-	apt-get update && \
-    apt-get install -y --fix-missing \
+RUN apt-get update \
+ && apt-get install -y --fix-missing \
     ### Installing python3 with deps ###
     python3 python3-psycopg2 python3-pip virtualenv \
     ### Installing libsrtp0-dev ###
@@ -37,7 +36,12 @@ RUN	add-apt-repository -y ppa:sbadia/opencv && \
     cmake autotools-dev build-essential libtool automake pkg-config gengetopt yasm git \
     ### Nginx deps ###
     libpcre3-dev libssl-dev \
-    ### qadrator deps ###    
+    ### software-properties-common ###
+    software-properties-common \
+    ### opencv ###
+ && add-apt-repository -y ppa:sbadia/opencv \
+ && apt-get update \
+ && apt-get install -y -f \
     libopencv-dev \
  && apt-get clean \
  && find /usr/ -type l -o -type f | sed 's/\ /\\\ /g ; s/usr/ocular\/usr/g' > /tmp/usr.lst
@@ -73,10 +77,11 @@ RUN  cd /ocular/src/nginx \
 
     ### processInstance ###
 COPY ./src/ocular_pi /ocular/src/pi
-RUN  cd /ocular/src/pi/project \
-  && qmake processInstance.pro \
+COPY ./src/qhttpserver /ocular/src/pi/wrappers/qhttpserver
+RUN  cd /ocular/src/pi \
+  && qmake -r theoremG.pro \
   && make \
-  && mv /ocular/src/pi/project/processInstance /usr/bin/processInstance
+  && mv /ocular/src/pi/bin/processInstance /usr/bin/processInstance
 
     ### qadrator ###
 COPY ./src/ocular_qadrator /ocular/src/qadrator
@@ -128,6 +133,15 @@ RUN  apt-get update \
      ffmpeg \
      ### libsrtp ###
      libx264-dev \
+     ### software-properties-common ###
+     software-properties-common \
+     ### opencv ###
+  && add-apt-repository -y ppa:sbadia/opencv \
+  && apt-get update \
+  && apt-get install -y -f \
+     libopencv-dev \
+  && apt-get purge software-properties-common -y \
+  && apt-get autoremove -y \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
