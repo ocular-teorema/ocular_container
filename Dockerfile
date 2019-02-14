@@ -20,10 +20,9 @@ RUN  cd /node \
 
 FROM ubuntu:xenial AS build
 
-RUN apt install software-properties-common && \
-	add-apt-repository -y ppa:sbadia/opencv && \
-	apt-get update \
- && apt-get install -y --fix-missing \
+RUN	add-apt-repository -y ppa:sbadia/opencv && \
+	apt-get update && \
+    apt-get install -y --fix-missing \
     ### Installing python3 with deps ###
     python3 python3-psycopg2 python3-pip virtualenv \
     ### Installing libsrtp0-dev ###
