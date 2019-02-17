@@ -25,6 +25,7 @@ build:docker:
       && git clone --branch 'release/4.1' --depth '1' https://github.com/FFmpeg/FFmpeg.git
       "
 deploy:stage0:
+  stage: deploy:stage0
   extends: .deploy_compose
   when: on_success
   tags:
