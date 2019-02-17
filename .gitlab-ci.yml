@@ -1,8 +1,10 @@
 include:
   - https://gitlab.ddgcorp.ru/devops/ci/raw/master/build_docker.yml
+  - https://gitlab.ddgcorp.ru/devops/ci/raw/master/deploy_compose.yml
 
 stages:
   - build
+  - deploy:stage0
 
 build:docker:
   tags:
@@ -22,3 +24,8 @@ build:docker:
       && git clone https://github.com/PimenovAlexander/qhttpserver.git
       && git clone --branch 'release/4.1' --depth '1' https://github.com/FFmpeg/FFmpeg.git
       "
+deploy:stage0:
+  extends: .deploy_compose
+  when: on_success
+  tags:
+    - ocular
