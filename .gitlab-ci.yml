@@ -8,7 +8,7 @@ stages:
 
 build:docker:
   when: manual
-  allow_failure: 'false'
+  allow_failure: false
   tags:
     - teorema
   stage: build
