@@ -14,8 +14,8 @@ build:docker:
   stage: build
   extends: .build_docker
   before_script:
-    - wget --header "private-token:${CI_JOB_TOKEN}" -qO- "https://gitlab.ddgcorp.ru/manzoni/ocular_front_mobile/-/jobs/artifacts/master/download?job=build"
-      | unzip - 
+    - wget --header "private-token:${CI_JOB_TOKEN}" "https://gitlab.ddgcorp.ru/manzoni/ocular_front_mobile/-/jobs/artifacts/master/download?job=build" 
+      && ls -1
     - mv ./artifacts/dist/teorema-mobile ./src/ocular_front_mobile
     - sh -c "
       cd src
