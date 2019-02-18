@@ -14,12 +14,12 @@ build:docker:
   stage: build
   extends: .build_docker
   before_script:
-    - wget --header "private-token: ${CI_JOB_TOKEN}" -qO 123.zip "https://gitlab.ddgcorp.ru/manzoni/ocular_front_mobile/-/jobs/artifacts/master/download?job=build"
-    - ls -l && cat 123.zip
-    - mv ./artifacts/dist/teorema-mobile ./src/ocular_front_mobile
+    #- wget --header "private-token: ${CI_JOB_TOKEN}" -qO 123.zip "https://gitlab.ddgcorp.ru/manzoni/ocular_front_mobile/-/jobs/artifacts/master/download?job=build"
+    #- mv ./artifacts/dist/teorema-mobile ./src/ocular_front_mobile
     - sh -c "
       cd src
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front.git
+      && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front_mobile.git
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_pi.git
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_qadrator.git
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/teorema.git
