@@ -7,14 +7,17 @@ stages:
   - deploy:stage0
 
 build:docker:
+  when: manual
+  allow_failure: 'false'
   tags:
     - teorema
   stage: build
   extends: .build_docker
   before_script:
-    - apk add curl unzip --no-cache
+    - apk add curl --no-cache
     - curl -sL --header "private-token:${CI_JOB_TOKEN}" "https://gitlab.ddgcorp.ru/manzoni/ocular_front_mobile/-/jobs/artifacts/master/download?job=build"
-      | unzip - && mv ./artifacts/dist/teorema-mobile ./src/ocular_front_mobile
+      | unzip - 
+    - mv ./artifacts/dist/teorema-mobile ./src/ocular_front_mobile
     - sh -c "
       cd src
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front.git
