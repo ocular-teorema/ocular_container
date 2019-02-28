@@ -77,11 +77,10 @@ RUN  cd /ocular/src/nginx \
 
     ### processInstance ###
 COPY ./src/ocular_pi /ocular/src/pi
-COPY ./src/qhttpserver /ocular/src/pi/wrappers/qhttpserver
-RUN  cd /ocular/src/pi \
-  && qmake -r theoremG.pro \
+RUN  cd /ocular/src/pi/project \
+  && qmake -r processInstance.pro \
   && make \
-  && mv /ocular/src/pi/bin/processInstance /usr/bin/processInstance
+  && mv /ocular/src/pi/project/processInstance /usr/bin/processInstance
 
     ### qadrator ###
 COPY ./src/ocular_qadrator /ocular/src/qadrator
