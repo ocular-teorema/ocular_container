@@ -27,6 +27,8 @@ build:docker:
       "
       
 deploy:stage0:
+  variables:
+    COMPOSE_SOURCE: "https://gitlab.ddgcorp.ru/manzoni/ocular_container/raw/master/docker-compose.yml"
   stage: deploy:stage0
   extends: .deploy_compose
   tags:
