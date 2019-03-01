@@ -1,18 +1,20 @@
 include:
-  - https://gitlab.ddgcorp.ru/devops/ci/raw/master/build_docker.yml
-  - https://gitlab.ddgcorp.ru/devops/ci/raw/master/deploy_compose.yml
+  - project: devops/ci
+    file: build_docker.yml
+  - project: devops/ci
+    file: deploy_compose.yml
 
 stages:
   - build
-  - deploy:stage0
+  - deploy
 
 build:docker:
+  extends: .build_docker
+  stage: build
   when: manual
   allow_failure: false
   tags:
     - teorema
-  stage: build
-  extends: .build_docker
   before_script:
     #- wget --header "private-token: ${CI_JOB_TOKEN}" -qO 123.zip "https://gitlab.ddgcorp.ru/manzoni/ocular_front_mobile/-/jobs/artifacts/master/download?job=build"
     #- mv ./artifacts/dist/teorema-mobile ./src/ocular_front_mobile
@@ -28,8 +30,8 @@ build:docker:
       
 deploy:stage0:
   extends: .deploy_compose
-  variables:
-    COMPOSE_SOURCE: "https://gitlab.ddgcorp.ru/manzoni/ocular_container/raw/master/docker-compose.yml"
-  stage: deploy:stage0
+  dependencies:
+    - build:docker
+  stage: deploy
   tags:
     - ocular
