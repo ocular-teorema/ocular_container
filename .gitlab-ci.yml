@@ -30,8 +30,6 @@ build:docker:
       
 deploy:stage0:
   extends: .deploy_compose
-  dependencies:
-    - build:docker
   stage: deploy
   tags:
     - ocular
