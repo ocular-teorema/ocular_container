@@ -13,6 +13,9 @@ build:docker:
   stage: build
   when: manual
   allow_failure: false
+  artifacts:
+    paths:
+      - docker-compose.yml
   tags:
     - teorema
   before_script:
@@ -31,5 +34,7 @@ build:docker:
 deploy:stage0:
   extends: .deploy_compose
   stage: deploy
+  dependencies:
+    - build:docker
   tags:
     - ocular
