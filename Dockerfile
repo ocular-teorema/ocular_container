@@ -12,6 +12,8 @@ FROM node:11.3 AS mobile
 
 COPY ./src/ocular_front_mobile /node
 
+ARG PROJECT=teorema
+
 RUN  cd /node \
   && rm -rf node_modules .git* *.lock package-lock.json \
   && npm i \
