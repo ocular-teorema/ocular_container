@@ -13,6 +13,8 @@ build:docker:
   stage: build
   when: manual
   allow_failure: false
+  variables:
+    BUILD_ARGS: PROJECT=${PROJECT}
   artifacts:
     paths:
       - docker-compose.yml
