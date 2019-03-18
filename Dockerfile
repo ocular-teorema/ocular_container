@@ -5,7 +5,7 @@ COPY ./src/ocular_front /node
 RUN  cd /node \
   && rm -rf node_modules .git* *.lock package-lock.json \
   && npm i \
-  && ./node_modules/gulp/bin/gulp.js production \
+  && ./node_modules/gulp/bin/gulp.js production --project=stalt \
   && rm -rf node_modules .git* *.lock package-lock.json
 
 FROM node:11.3 AS mobile
@@ -17,7 +17,7 @@ ARG PROJECT=teorema
 RUN  cd /node \
   && rm -rf node_modules .git* *.lock package-lock.json \
   && npm i \
-  && npm run build --project=stalt \
+  && npm run build \
   && rm -rf node_modules .git* *.lock package-lock.json
 
 FROM ubuntu:xenial AS build
