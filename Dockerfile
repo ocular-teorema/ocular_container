@@ -15,7 +15,7 @@ COPY ./src/ocular_front_mobile /node
 RUN  cd /node \
   && rm -rf node_modules .git* *.lock package-lock.json \
   && npm i \
-  && npm run build \
+  && npm run build --project=${PROJECT} \
   && rm -rf node_modules .git* *.lock package-lock.json
 
 FROM ubuntu:xenial AS build
