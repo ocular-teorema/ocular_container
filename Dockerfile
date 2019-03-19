@@ -17,7 +17,7 @@ ARG PROJECT=teorema
 RUN  cd /node \
   && rm -rf node_modules .git* *.lock package-lock.json \
   && npm i \
-  && npm run build --project=${PROJECT} \
+  && npm run build \
   && rm -rf node_modules .git* *.lock package-lock.json
 
 FROM ubuntu:xenial AS build
