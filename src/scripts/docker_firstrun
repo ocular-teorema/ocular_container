@@ -22,7 +22,6 @@ psql video_analytics < /tmp/pg/va_schema_dump.sql
 
 cd /var/www/teorema
 source /var/www/teorema/env/bin/activate
-python3 manage.py makemigrations cameras orgs other users --noinput
 python3 manage.py migrate --noinput
 deactivate
 
