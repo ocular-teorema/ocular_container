@@ -29,7 +29,7 @@ build:docker:
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front_mobile.git
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_pi.git
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_qadrator.git
-      && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/teorema.git
+      && git clone --branch 'testing' https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/teorema.git
       && git clone --branch 'release/4.1' --depth '1' https://github.com/FFmpeg/FFmpeg.git
       "
       
