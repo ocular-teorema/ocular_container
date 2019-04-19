@@ -5,6 +5,7 @@ services:
     image: registry.ddgcorp.ru/manzoni/ocular_container:master
     restart: always
     tty: true
+    shm_size: '2gb'
     ports:
       - 80:80
       - 1935:1935
