@@ -13,4 +13,9 @@ do
     sed -i 's/^HttpPort=/Port=/' "$D"
 done
 
+for D in /home/_processInstances/*/theorem.conf
+do
+    sed -i 's/^\[General\]/\[Common\]/' "$D"
+done
+
 supervisord
