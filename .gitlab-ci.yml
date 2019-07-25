@@ -25,7 +25,7 @@ build:docker:
     #- mv ./artifacts/dist/teorema-mobile ./src/ocular_front_mobile
     - sh -c "
       cd src
-      && git clone --branch 'feature/new-quadrator-settings' https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front.git
+      && git clone --branch 'feature/notification_window' https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front.git
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front_mobile.git
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_pi.git
       && git clone --branch 'new_quad' https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_qadrator.git
