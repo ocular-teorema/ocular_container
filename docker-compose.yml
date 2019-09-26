@@ -2,9 +2,10 @@ version: '3.4'
 
 services:
   ocular:
-    image: docker.ddgcorp.ru/manzoni/ocular_container:master
+    image: registry.ddgcorp.ru/manzoni/ocular_container:master
     restart: always
     tty: true
+    shm_size: '2gb'
     ports:
       - 80:80
       - 1935:1935
@@ -20,6 +21,17 @@ services:
       - pg:/var/lib/postgresql/9.5/main
       - pi:/home/_processInstances
       - va:/home/_VideoArchive
+      # --------------------------------------------------
+      # Если нужно вынести какую-либо из этих директорий в определённый каталог:
+      # - /some/directory/va:/home/_VideoArchive
+      # -------------------------------------------
+      # Postgres директорию не менять!!!
+      # -------------------------------------
+
+
+# ------------------------
+# НИЖЕ НИЧЕГО НЕ МЕНЯТЬ!!!
+# ------------------------
 
 networks:
   nw:

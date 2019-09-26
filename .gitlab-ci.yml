@@ -1,17 +1,28 @@
 include:
-  - https://gitlab.ddgcorp.ru/devops/ci/raw/master/build_docker.yml
+  - project: devops/ci
+    file: build_docker.yml
+  - project: devops/ci
+    file: deploy_compose.yml
 
 stages:
   - build
+  - deploy
 
 build:docker:
-  tags:
-    - teorema
+  extends: .build_docker
   stage: build
   when: manual
   allow_failure: false
-  extends: .build_docker
+  variables:
+    BUILD_ARGS: PROJECT=${PROJECT}
+  artifacts:
+    paths:
+      - docker-compose.yml
+  tags:
+    - teorema
   before_script:
+    #- wget --header "private-token: ${CI_JOB_TOKEN}" -qO 123.zip "https://gitlab.ddgcorp.ru/manzoni/ocular_front_mobile/-/jobs/artifacts/master/download?job=build"
+    #- mv ./artifacts/dist/teorema-mobile ./src/ocular_front_mobile
     - sh -c "
       cd src
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/ocular_front.git
@@ -21,3 +32,11 @@ build:docker:
       && git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.ddgcorp.ru/manzoni/teorema.git
       && git clone --branch 'release/4.1' --depth '1' https://github.com/FFmpeg/FFmpeg.git
       "
+      
+deploy:stage0:
+  extends: .deploy_compose
+  stage: deploy
+  dependencies:
+    - build:docker
+  tags:
+    - ocular
