@@ -11,6 +11,7 @@ echo "Installing nginx with modules"
             --with-cc-opt="-Wno-error"                          \
             --error-log-path=logs/error.log                     \
             --http-log-path=logs/access.log                     \
+            --with-http_mp4_module                              \
             --with-http_ssl_module                              \
             --add-module=$nginx_path/nginx-rtmp-module-1.1.7    
 make
