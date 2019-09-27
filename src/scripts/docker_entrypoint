@@ -3,10 +3,19 @@ service cron start
 service postgresql start
 cat /var/lib/postgresql/9.5/main/.MARK &>2 /dev/null || docker_firstrun
 
-#cd /var/www/teorema
-#source /var/www/teorema/env/bin/activate
-#python3 manage.py makemigrations cameras orgs other users --noinput
-#python3 manage.py migrate --noinput
-#deactivate
+cd /var/www/teorema
+source /var/www/teorema/env/bin/activate
+python3 manage.py migrate --noinput || /usr/local/scripts/fix_migrations
+deactivate
+
+for D in /home/_processInstances/*/theorem.conf
+do
+    sed -i 's/^HttpPort=/Port=/' "$D"
+done
+
+for D in /home/_processInstances/*/theorem.conf
+do
+    sed -i 's/^\[General\]/\[Common\]/' "$D"
+done
 
 supervisord
