@@ -72,6 +72,7 @@ RUN  cd /ocular/src/nginx \
 		    --pid-path=/var/run/nginx.pid \
         	    --lock-path=/var/run/nginx.lock \
                     --with-cc-opt="-Wno-error" \
+                    --with-http_mp4_module \
                     --with-http_ssl_module \
                     --add-module=${PWD}/nginx-rtmp-module-1.1.7 \
   && make \
