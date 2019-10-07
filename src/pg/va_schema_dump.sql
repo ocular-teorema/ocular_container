@@ -88,7 +88,9 @@ CREATE TABLE records (
     cam text,
     id integer NOT NULL,
     heatmap bytea,
-    stats_data bytea
+    stats_data bytea,
+    start_posix_time bigint,
+    end_posix_time bigint
 );
 
 
