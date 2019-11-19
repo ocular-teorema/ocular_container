@@ -201,3 +201,5 @@ GRANT SELECT,USAGE ON SEQUENCE records_id_seq TO va;
 -- PostgreSQL database dump complete
 --
 
+ALTER SYSTEM SET max_connections = 6;
+ALTER SYSTEM RESET shared_buffers;
