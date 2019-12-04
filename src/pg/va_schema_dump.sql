@@ -88,7 +88,9 @@ CREATE TABLE records (
     cam text,
     id integer NOT NULL,
     heatmap bytea,
-    stats_data bytea
+    stats_data bytea,
+    start_posix_time bigint,
+    end_posix_time bigint
 );
 
 
@@ -199,3 +201,5 @@ GRANT SELECT,USAGE ON SEQUENCE records_id_seq TO va;
 -- PostgreSQL database dump complete
 --
 
+ALTER SYSTEM SET max_connections = 400;
+ALTER SYSTEM RESET shared_buffers;
