@@ -19,6 +19,8 @@ su - postgres -c "psql -c 'ALTER ROLE "va" WITH SUPERUSER'"
 su - postgres -c "psql -c 'ALTER ROLE "root" WITH LOGIN'"
 su - postgres -c "psql -c 'ALTER ROLE "root" WITH SUPERUSER'"
 psql video_analytics < /tmp/pg/va_schema_dump.sql
+su - postgres -c "psql -c 'CREATE DATABASE theorema_schedules;'"
+su - postgres -c "psql -c 'GRANT ALL ON DATABASE theorema_schedules TO theorema;'"
 
 cd /var/www/teorema
 source /var/www/teorema/env/bin/activate
