@@ -2,4 +2,5 @@
 cd /var/www/teorema
 source /var/www/teorema/env/bin/activate
 python3 manage.py setorgs
+supervisorctl restart rabbitmq_receiver
 deactivate

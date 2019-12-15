@@ -100,6 +100,7 @@ RUN cd /var/www/teorema \
  && virtualenv -p python3 env \
  && . env/bin/activate \
  && pip3 install --no-cache-dir -r ./requirements.txt \
+ && pip3 install setuptools==39.1.0 \
  && python3 manage.py collectstatic --noinput \
  && deactivate
 
