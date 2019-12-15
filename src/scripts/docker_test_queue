@@ -2,5 +2,4 @@
 cd /var/www/teorema
 source /var/www/teorema/env/bin/activate
 python3 manage.py test_queue
-supervisorctl restart rabbitmq_receiver
 deactivate
