@@ -157,6 +157,7 @@ COPY ./src/supervisor /etc/supervisor
 COPY ./src/scripts /usr/local/scripts
 COPY ./src/pg /tmp/pg
 RUN  mv /tmp/pg/pg_hba.conf /etc/postgresql/9.5/main/ \
+  && mv /tmp/pg/postgresql.conf /etc/postgresql/9.5/main/ \
      \
   && ln -sf /home/_processInstances/cameras.conf /etc/supervisor/conf.d/cameras.conf \
   && chgrp -R www-data /etc/supervisor/* \
