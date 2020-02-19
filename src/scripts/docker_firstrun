@@ -21,10 +21,13 @@ su - postgres -c "psql -c 'ALTER ROLE "root" WITH SUPERUSER'"
 psql video_analytics < /tmp/pg/va_schema_dump.sql
 su - postgres -c "psql -c 'CREATE DATABASE theorema_schedules;'"
 su - postgres -c "psql -c 'GRANT ALL ON DATABASE theorema_schedules TO theorema;'"
+su - postgres -c "psql -c 'CREATE DATABASE error_logs;'"
+su - postgres -c "psql -c 'GRANT ALL ON DATABASE error_logs TO theorema;'"
 
 cd /var/www/teorema
 source /var/www/teorema/env/bin/activate
 python3 manage.py migrate --noinput
+python3 manage.py migrate --database=error_logs --noinput
 deactivate
 
 service postgresql restart
