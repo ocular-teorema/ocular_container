@@ -72,6 +72,7 @@ RUN  cd /ocular/src/nginx \
 		    --pid-path=/var/run/nginx.pid \
         	    --lock-path=/var/run/nginx.lock \
                     --with-cc-opt="-Wno-error" \
+                    --with-http_mp4_module \
                     --with-http_ssl_module \
                     --add-module=${PWD}/nginx-rtmp-module-1.1.7 \
   && make \
@@ -156,6 +157,7 @@ COPY ./src/supervisor /etc/supervisor
 COPY ./src/scripts /usr/local/scripts
 COPY ./src/pg /tmp/pg
 RUN  mv /tmp/pg/pg_hba.conf /etc/postgresql/9.5/main/ \
+  && mv /tmp/pg/postgresql.conf /etc/postgresql/9.5/main/ \
      \
   && ln -sf /home/_processInstances/cameras.conf /etc/supervisor/conf.d/cameras.conf \
   && chgrp -R www-data /etc/supervisor/* \
